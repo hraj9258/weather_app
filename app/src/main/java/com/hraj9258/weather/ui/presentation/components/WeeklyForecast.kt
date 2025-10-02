@@ -1,20 +1,13 @@
-package androidlead.weatherappui.ui.screen.components
+package com.hraj9258.weather.ui.presentation.components
 
-import androidlead.weatherappui.R
-import androidlead.weatherappui.ui.screen.util.ForecastData
-import androidlead.weatherappui.ui.screen.util.ForecastItem
-import androidlead.weatherappui.ui.screen.util.fromHex
-import androidlead.weatherappui.ui.theme.ColorGradient1
-import androidlead.weatherappui.ui.theme.ColorGradient2
-import androidlead.weatherappui.ui.theme.ColorGradient3
-import androidlead.weatherappui.ui.theme.ColorTextAction
-import androidlead.weatherappui.ui.theme.ColorTextPrimary
-import androidlead.weatherappui.ui.theme.ColorTextPrimaryVariant
-import androidlead.weatherappui.ui.theme.ColorTextSecondary
-import androidlead.weatherappui.ui.theme.ColorTextSecondaryVariant
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import com.hraj9258.weather.R
+import com.hraj9258.weather.core.presentation.theme.ColorTextAction
+import com.hraj9258.weather.core.presentation.theme.ColorTextPrimary
+import com.hraj9258.weather.core.presentation.theme.ColorTextPrimaryVariant
+import com.hraj9258.weather.core.presentation.theme.ColorTextSecondary
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,7 +23,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -42,13 +34,19 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.hraj9258.weather.core.presentation.theme.ColorGradient1
+import com.hraj9258.weather.core.presentation.theme.ColorGradient2
+import com.hraj9258.weather.core.presentation.theme.ColorGradient3
+import com.hraj9258.weather.core.presentation.theme.ColorTextSecondaryVariant
+import com.hraj9258.weather.ui.domain.model.ForecastItem
 
 @Composable
 fun WeeklyForecast(
     modifier: Modifier = Modifier,
-    data: List<ForecastItem> = ForecastData
+    data: List<ForecastItem>
 ) {
     Column(
         modifier = modifier,
@@ -112,6 +110,26 @@ private fun ActionText(
             contentDescription = null,
             modifier = Modifier.size(20.dp),
             tint = ColorTextAction
+        )
+    }
+}
+
+@Composable
+fun WeatherImage(
+    modifier: Modifier = Modifier,
+    @DrawableRes image: Int
+) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(60.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Image(
+            painter = painterResource(image),
+            contentDescription = null,
+            contentScale = ContentScale.FillWidth,
+            modifier = Modifier.fillMaxWidth()
         )
     }
 }
@@ -200,57 +218,9 @@ private fun Forecast(
         Spacer(
             modifier = Modifier.height(8.dp)
         )
-        AirQualityIndicator(
-            value = item.airQuality,
-            color = item.airQualityIndicatorColorHex
-        )
+//        AirQualityIndicator(
+//            value = item.airQuality,
+//            color = item.airQualityIndicatorColorHex
+//        )
     }
 }
-
-@Composable
-private fun WeatherImage(
-    modifier: Modifier = Modifier,
-    @DrawableRes image: Int
-) {
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(60.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Image(
-            painter = painterResource(image),
-            contentDescription = null,
-            contentScale = ContentScale.FillWidth,
-            modifier = Modifier.fillMaxWidth()
-        )
-    }
-}
-
-@Composable
-private fun AirQualityIndicator(
-    modifier: Modifier = Modifier,
-    value: String,
-    color: String
-) {
-    Surface(
-        modifier = modifier,
-        color = Color.fromHex(color),
-        contentColor = ColorTextSecondary,
-        shape = RoundedCornerShape(8.dp)
-    ) {
-        Box(
-            modifier = Modifier
-                .width(35.dp)
-                .padding(vertical = 2.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = value,
-                style = MaterialTheme.typography.labelSmall,
-            )
-        }
-    }
-}
-
-

@@ -1,16 +1,21 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.jetbrains.kotlin.serialization)
 }
 
 android {
-    namespace = "androidlead.weatherappui"
-    compileSdk = 34
+    namespace = "com.hraj9258.weather"
+    compileSdk = 36
+    buildFeatures.buildConfig = true
 
     defaultConfig {
-        applicationId = "androidlead.weatherappui"
+        applicationId = "com.hraj9258.weather"
         minSdk = 28
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -18,33 +23,31 @@ android {
             useSupportLibrary = true
         }
     }
+    val properties = Properties()
+    properties.load(project.rootProject.file("local.properties").inputStream())
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            buildConfigField("String", "WEATHER_API_KEY", properties.getProperty("WEATHER_API_KEY"))
+        }
+        debug {
+            buildConfigField("String", "WEATHER_API_KEY", properties.getProperty("WEATHER_API_KEY"))
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "11"
     }
     buildFeatures {
         compose = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
-    }
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
     }
 }
 
@@ -53,6 +56,15 @@ dependencies {
     implementation(libs.bundles.androidX)
     //Compose
     implementation(platform(libs.compose.bom))
+    implementation(libs.bundles.compose)
     debugImplementation(libs.compose.tooling)
-    implementation(libs.bundles.ui)
+
+    // Koin
+    implementation(libs.koin.androidx.compose)
+
+    // Fused Location Provider
+    implementation(libs.play.services.location)
+
+    // Ktor
+    implementation(libs.bundles.ktor)
 }

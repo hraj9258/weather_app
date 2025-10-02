@@ -1,4 +1,4 @@
-package androidlead.weatherappui.ui.screen.components
+package com.hraj9258.weather.ui.presentation.components
 
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.Modifier

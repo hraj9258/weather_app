@@ -1,12 +1,11 @@
-package androidlead.weatherappui.ui.screen.components
+package com.hraj9258.weather.ui.presentation.components
 
-import androidlead.weatherappui.R
-import androidlead.weatherappui.ui.screen.util.AirQualityData
-import androidlead.weatherappui.ui.screen.util.AirQualityItem
-import androidlead.weatherappui.ui.theme.ColorAirQualityIconTitle
-import androidlead.weatherappui.ui.theme.ColorSurface
-import androidlead.weatherappui.ui.theme.ColorTextPrimary
-import androidlead.weatherappui.ui.theme.ColorTextPrimaryVariant
+import androidx.annotation.DrawableRes
+import com.hraj9258.weather.R
+import com.hraj9258.weather.core.presentation.theme.ColorAirQualityIconTitle
+import com.hraj9258.weather.core.presentation.theme.ColorSurface
+import com.hraj9258.weather.core.presentation.theme.ColorTextPrimary
+import com.hraj9258.weather.core.presentation.theme.ColorTextPrimaryVariant
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -31,13 +30,52 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.hraj9258.weather.ui.domain.model.AirQualityDataUI
+
+data class AirQualityItem(
+    @DrawableRes val icon: Int,
+    val title: String,
+    val value: String
+)
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun AirQuality(
+    airQualityDataUI: AirQualityDataUI,
     modifier: Modifier = Modifier,
-    data: List<AirQualityItem> = AirQualityData
 ) {
+    val data = listOf(
+        AirQualityItem(
+            title = "Real Feel",
+            value = airQualityDataUI.realFeel,
+            icon = R.drawable.ic_real_feel
+        ),
+        AirQualityItem(
+            title = "Wind",
+            value = airQualityDataUI.wind,
+            icon = R.drawable.ic_wind_qality,
+        ),
+        AirQualityItem(
+            title = "SO2",
+            value = airQualityDataUI.so2.toString(),
+            icon = R.drawable.ic_so2
+        ),
+        AirQualityItem(
+            title = "Rain",
+            value = airQualityDataUI.rain.toString(),
+            icon = R.drawable.ic_rain_chance
+        ),
+        AirQualityItem(
+            title = "UV Index",
+            value = airQualityDataUI.uvIndex.toString(),
+            icon = R.drawable.ic_uv_index
+        ),
+        AirQualityItem(
+            title = "OЗ",
+            value = airQualityDataUI.o3.toString(),
+            icon = R.drawable.ic_o3
+        )
+    )
     Surface(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(32.dp),

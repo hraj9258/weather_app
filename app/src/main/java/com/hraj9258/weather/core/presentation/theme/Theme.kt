@@ -1,4 +1,4 @@
-package androidlead.weatherappui.ui.theme
+package com.hraj9258.weather.core.presentation.theme
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
@@ -11,7 +11,7 @@ private val AppColorTheme = darkColorScheme(
 )
 
 @Composable
-fun WeatherAppUiTheme(
+fun WeatherAppTheme(
     content: @Composable () -> Unit
 ) {
     MaterialTheme(

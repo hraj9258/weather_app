@@ -1,13 +1,13 @@
-package androidlead.weatherappui.ui.screen.components
+package com.hraj9258.weather.ui.presentation.components
 
-import androidlead.weatherappui.R
-import androidlead.weatherappui.ui.theme.ColorGradient1
-import androidlead.weatherappui.ui.theme.ColorGradient2
-import androidlead.weatherappui.ui.theme.ColorGradient3
-import androidlead.weatherappui.ui.theme.ColorImageShadow
-import androidlead.weatherappui.ui.theme.ColorSurface
-import androidlead.weatherappui.ui.theme.ColorTextPrimary
-import androidlead.weatherappui.ui.theme.ColorTextSecondary
+import com.hraj9258.weather.R
+import com.hraj9258.weather.core.presentation.theme.ColorGradient1
+import com.hraj9258.weather.core.presentation.theme.ColorGradient2
+import com.hraj9258.weather.core.presentation.theme.ColorGradient3
+import com.hraj9258.weather.core.presentation.theme.ColorImageShadow
+import com.hraj9258.weather.core.presentation.theme.ColorSurface
+import com.hraj9258.weather.core.presentation.theme.ColorTextPrimary
+import com.hraj9258.weather.core.presentation.theme.ColorTextSecondary
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -38,6 +38,8 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun ActionBar(
+    city: String,
+    country: String,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -48,7 +50,7 @@ fun ActionBar(
         ControlButton()
         LocationInfo(
             modifier = Modifier.padding(top = 10.dp),
-            location = "Rome"
+            location = "$city, $country",
         )
         ProfileButton()
     }

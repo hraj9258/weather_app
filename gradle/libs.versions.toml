@@ -1,11 +1,16 @@
 [versions]
-agp = "8.5.2"
-kotlin = "1.9.0"
-androidx-core = "1.13.1"
-androidx-runtime = "2.8.4"
-compose-activity = "1.9.1"
-compose-bom = "2024.06.00"
-compose-constrain-layout = "1.0.1"
+agp = "8.13.0"
+koin-android = "4.1.1"
+koinAndroidxCompose = "4.1.1"
+kotlin = "2.2.20"
+androidx-core = "1.17.0"
+androidx-runtime = "2.9.4"
+compose-activity = "1.11.0"
+compose-bom = "2025.09.01"
+compose-constrain-layout = "1.1.1"
+ktor = "3.3.0"
+playServicesLocation = "21.3.0"
+
 
 [libraries]
 androidx-core = { group = "androidx.core", name = "core-ktx", version.ref = "androidx-core" }
@@ -20,11 +25,39 @@ compose-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-pr
 compose-constraint-layout = { group = "androidx.constraintlayout", name = "constraintlayout-compose", version.ref = "compose-constrain-layout" }
 compose-activity = { group = "androidx.activity", name = "activity-compose", version.ref = "compose-activity" }
 
+koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koinAndroidxCompose" }
 
-[bundles]
-androidX = ["androidx-core", "androidx-lifecycle"]
-ui = ["compose-ui", "compose-graphics", "compose-tooling-preview", "compose-activity", "androidx-material3", "compose-constraint-layout"]
+ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
+ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
+ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
+
+play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+jetbrains-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+
+[bundles]
+androidX = [
+    "androidx-core",
+    "androidx-lifecycle",
+    "androidx-material3",
+]
+compose = [
+    "compose-activity",
+    "compose-constraint-layout",
+    "compose-graphics",
+    "compose-tooling-preview",
+    "compose-ui"
+]
+ktor = [
+    "ktor-client-cio",
+    "ktor-client-content-negotiation",
+    "ktor-client-core",
+    "ktor-client-logging",
+    "ktor-serialization-kotlinx-json"
+]

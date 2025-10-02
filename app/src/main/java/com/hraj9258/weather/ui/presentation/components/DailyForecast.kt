@@ -1,12 +1,12 @@
-package androidlead.weatherappui.ui.screen.components
+package com.hraj9258.weather.ui.presentation.components
 
-import androidlead.weatherappui.R
-import androidlead.weatherappui.ui.theme.ColorGradient1
-import androidlead.weatherappui.ui.theme.ColorGradient2
-import androidlead.weatherappui.ui.theme.ColorGradient3
-import androidlead.weatherappui.ui.theme.ColorTextSecondary
-import androidlead.weatherappui.ui.theme.ColorTextSecondaryVariant
-import androidlead.weatherappui.ui.theme.ColorWindForecast
+import com.hraj9258.weather.R
+import com.hraj9258.weather.core.presentation.theme.ColorGradient1
+import com.hraj9258.weather.core.presentation.theme.ColorGradient2
+import com.hraj9258.weather.core.presentation.theme.ColorGradient3
+import com.hraj9258.weather.core.presentation.theme.ColorTextSecondary
+import com.hraj9258.weather.core.presentation.theme.ColorTextSecondaryVariant
+import com.hraj9258.weather.core.presentation.theme.ColorWindForecast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -33,17 +33,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.annotation.DrawableRes
+import androidx.compose.foundation.basicMarquee
 
 @Composable
 fun DailyForecast(
+    temperatureC: Double,
+    description: String,
+    isDay: Boolean,
+    @DrawableRes iconRes: Int,
     modifier: Modifier = Modifier,
-    forecast: String = "Rain showers",
-    date: String = "Monday, 12 Feb"
 ) {
     ConstraintLayout(
         modifier = modifier.fillMaxWidth()
     ) {
-        val (forecastImage, forecastValue, windImage, title, description, background) = createRefs()
+        val (forecastImage, forecastValue, windImage, title, descriptionRef, background) = createRefs()
 
         CardBackground(
             modifier = Modifier.constrainAs(background) {
@@ -51,7 +55,7 @@ fun DailyForecast(
                     start = parent.start,
                     end = parent.end,
                     top = parent.top,
-                    bottom = description.bottom,
+                    bottom = descriptionRef.bottom,
                     topMargin = 24.dp
                 )
                 height = Dimension.fillToConstraints
@@ -59,7 +63,7 @@ fun DailyForecast(
         )
 
         Image(
-            painter = painterResource(R.drawable.img_sub_rain),
+            painter = painterResource(iconRes),
             contentDescription = null,
             contentScale = ContentScale.FillHeight,
             modifier = Modifier
@@ -71,22 +75,26 @@ fun DailyForecast(
         )
 
         Text(
-            text = forecast,
+            text = description,
             style = MaterialTheme.typography.titleLarge,
             color = ColorTextSecondary,
             fontWeight = FontWeight.Medium,
-            modifier = Modifier.constrainAs(title) {
-                start.linkTo(anchor = parent.start, margin = 24.dp)
-                top.linkTo(anchor = forecastImage.bottom)
-            }
+            modifier = Modifier
+                .fillMaxWidth(0.5f)
+                .basicMarquee()
+                .constrainAs(title) {
+                    start.linkTo(anchor = parent.start, margin = 24.dp)
+                    top.linkTo(anchor = forecastImage.bottom)
+                }
+
         )
 
         Text(
-            text = date,
+            text = if (isDay) "Today" else "Tonight",
             style = MaterialTheme.typography.bodyMedium,
             color = ColorTextSecondaryVariant,
             modifier = Modifier
-                .constrainAs(description) {
+                .constrainAs(descriptionRef) {
                     start.linkTo(anchor = title.start)
                     top.linkTo(anchor = title.bottom)
                 }
@@ -98,7 +106,9 @@ fun DailyForecast(
                 end.linkTo(anchor = parent.end, margin = 24.dp)
                 top.linkTo(forecastImage.top)
                 bottom.linkTo(forecastImage.bottom)
-            }
+            },
+            degree = String.format("%.0f", temperatureC),
+            description = "Feels like $temperatureC°C"
         )
 
         WindForecastImage(

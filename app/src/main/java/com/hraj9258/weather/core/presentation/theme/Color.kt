@@ -1,4 +1,4 @@
-package androidlead.weatherappui.ui.theme
+package com.hraj9258.weather.core.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 
