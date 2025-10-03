@@ -1,12 +1,8 @@
 package com.hraj9258.weather.ui.presentation.components
 
 import androidx.annotation.DrawableRes
-import com.hraj9258.weather.R
-import com.hraj9258.weather.core.presentation.theme.ColorAirQualityIconTitle
-import com.hraj9258.weather.core.presentation.theme.ColorSurface
-import com.hraj9258.weather.core.presentation.theme.ColorTextPrimary
-import com.hraj9258.weather.core.presentation.theme.ColorTextPrimaryVariant
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,6 +11,7 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -28,8 +25,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.hraj9258.weather.R
+import com.hraj9258.weather.core.presentation.ShimmerEffect
+import com.hraj9258.weather.core.presentation.theme.ColorAirQualityIconTitle
+import com.hraj9258.weather.core.presentation.theme.ColorSurface
+import com.hraj9258.weather.core.presentation.theme.ColorTextPrimary
+import com.hraj9258.weather.core.presentation.theme.ColorTextPrimaryVariant
 import com.hraj9258.weather.ui.domain.model.AirQualityDataUI
 
 data class AirQualityItem(
@@ -41,8 +45,16 @@ data class AirQualityItem(
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun AirQuality(
-    airQualityDataUI: AirQualityDataUI,
+    airQualityDataUI: AirQualityDataUI = AirQualityDataUI(
+        realFeel = "NaN",
+        wind = "NaN",
+        so2 = -1.0f,
+        rain = -1.0f,
+        uvIndex = -1.0f,
+        o3 = -1.0f
+    ),
     modifier: Modifier = Modifier,
+    isLoading: Boolean = false
 ) {
     val data = listOf(
         AirQualityItem(
@@ -90,17 +102,26 @@ fun AirQuality(
         ) {
             AirQualityHeader()
 
-            FlowRow(
-                modifier = Modifier.fillMaxWidth(),
-                maxItemsInEachRow = 3,
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                data.onEach { item ->
-                    AirQualityInfo(
-                        data = item,
-                        modifier = Modifier.weight(weight = 1f)
-                    )
+            if (isLoading){
+                ShimmerEffect(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(80.dp)
+                        .background(Color.LightGray, shape = RoundedCornerShape(24.dp)),
+                )
+            } else {
+                FlowRow(
+                    modifier = Modifier.fillMaxWidth(),
+                    maxItemsInEachRow = 3,
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    data.onEach { item ->
+                        AirQualityInfo(
+                            data = item,
+                            modifier = Modifier.weight(weight = 1f)
+                        )
+                    }
                 }
             }
         }
@@ -197,5 +218,26 @@ private fun AirQualityInfo(
                 color = ColorTextPrimary
             )
         }
+    }
+}
+
+@Preview
+@Composable
+private fun AirQualityPreview() {
+    MaterialTheme {
+        AirQuality(
+            modifier = Modifier
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun AirQualityLoadingPreview() {
+    MaterialTheme {
+        AirQuality(
+            isLoading = true,
+            modifier = Modifier
+        )
     }
 }

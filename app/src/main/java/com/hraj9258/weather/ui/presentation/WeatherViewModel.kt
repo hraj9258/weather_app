@@ -1,8 +1,8 @@
 package com.hraj9258.weather.ui.presentation
 
-import com.hraj9258.weather.ui.domain.usecase.GetWeatherUseCase
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hraj9258.weather.ui.domain.usecase.GetWeatherUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

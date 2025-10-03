@@ -1,13 +1,5 @@
 package com.hraj9258.weather.ui.presentation.components
 
-import com.hraj9258.weather.R
-import com.hraj9258.weather.core.presentation.theme.ColorGradient1
-import com.hraj9258.weather.core.presentation.theme.ColorGradient2
-import com.hraj9258.weather.core.presentation.theme.ColorGradient3
-import com.hraj9258.weather.core.presentation.theme.ColorImageShadow
-import com.hraj9258.weather.core.presentation.theme.ColorSurface
-import com.hraj9258.weather.core.presentation.theme.ColorTextPrimary
-import com.hraj9258.weather.core.presentation.theme.ColorTextSecondary
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -20,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -34,12 +27,23 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.hraj9258.weather.R
+import com.hraj9258.weather.core.presentation.ShimmerEffect
+import com.hraj9258.weather.core.presentation.theme.ColorGradient1
+import com.hraj9258.weather.core.presentation.theme.ColorGradient2
+import com.hraj9258.weather.core.presentation.theme.ColorGradient3
+import com.hraj9258.weather.core.presentation.theme.ColorImageShadow
+import com.hraj9258.weather.core.presentation.theme.ColorSurface
+import com.hraj9258.weather.core.presentation.theme.ColorTextPrimary
+import com.hraj9258.weather.core.presentation.theme.ColorTextSecondary
 
 @Composable
 fun ActionBar(
-    city: String,
-    country: String,
+    city: String = "",
+    country: String = "",
+    isLoading: Boolean = false,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -50,6 +54,7 @@ fun ActionBar(
         ControlButton()
         LocationInfo(
             modifier = Modifier.padding(top = 10.dp),
+            isLoading = isLoading,
             location = "$city, $country",
         )
         ProfileButton()
@@ -119,6 +124,7 @@ private fun ProfileButton(
 @Composable
 private fun LocationInfo(
     modifier: Modifier = Modifier,
+    isLoading: Boolean = false,
     location: String
 ) {
     Column(
@@ -136,12 +142,22 @@ private fun LocationInfo(
                 modifier = Modifier.height(18.dp),
                 contentScale = ContentScale.FillHeight
             )
-            Text(
-                text = location,
-                style = MaterialTheme.typography.titleLarge,
-                color = ColorTextPrimary,
-                fontWeight = FontWeight.Bold
-            )
+            if (isLoading) {
+                ShimmerEffect(
+                    modifier = Modifier
+                        .padding(2.dp)
+                        .width(160.dp)
+                        .height(24.dp)
+                        .background(Color.LightGray, RoundedCornerShape(50))
+                )
+            } else {
+                Text(
+                    text = location,
+                    style = MaterialTheme.typography.titleLarge,
+                    color = ColorTextPrimary,
+                    fontWeight = FontWeight.Bold
+                )
+            }
         }
         ProgressBar()
     }
@@ -170,6 +186,33 @@ private fun ProgressBar(
             text = "Updating •",
             style = MaterialTheme.typography.labelSmall,
             color = ColorTextSecondary.copy(alpha = 0.7f)
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun ActionBarPreview() {
+    MaterialTheme {
+        ActionBar(
+            city = "City",
+            country = "Country",
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.background)
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun ActionBarLoadingPreview() {
+    MaterialTheme {
+        ActionBar(
+            city = "City",
+            country = "Country",
+            isLoading = true,
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.background)
         )
     }
 }

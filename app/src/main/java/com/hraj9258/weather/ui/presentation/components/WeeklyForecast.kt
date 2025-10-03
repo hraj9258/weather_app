@@ -3,11 +3,6 @@ package com.hraj9258.weather.ui.presentation.components
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import com.hraj9258.weather.R
-import com.hraj9258.weather.core.presentation.theme.ColorTextAction
-import com.hraj9258.weather.core.presentation.theme.ColorTextPrimary
-import com.hraj9258.weather.core.presentation.theme.ColorTextPrimaryVariant
-import com.hraj9258.weather.core.presentation.theme.ColorTextSecondary
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -37,16 +33,23 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.hraj9258.weather.R
+import com.hraj9258.weather.core.presentation.ShimmerEffect
 import com.hraj9258.weather.core.presentation.theme.ColorGradient1
 import com.hraj9258.weather.core.presentation.theme.ColorGradient2
 import com.hraj9258.weather.core.presentation.theme.ColorGradient3
+import com.hraj9258.weather.core.presentation.theme.ColorTextAction
+import com.hraj9258.weather.core.presentation.theme.ColorTextPrimary
+import com.hraj9258.weather.core.presentation.theme.ColorTextPrimaryVariant
+import com.hraj9258.weather.core.presentation.theme.ColorTextSecondary
 import com.hraj9258.weather.core.presentation.theme.ColorTextSecondaryVariant
 import com.hraj9258.weather.ui.domain.model.ForecastItem
 
 @Composable
 fun WeeklyForecast(
     modifier: Modifier = Modifier,
-    data: List<ForecastItem>
+    data: List<ForecastItem> = emptyList(),
+    isLoading: Boolean = false
 ) {
     Column(
         modifier = modifier,
@@ -58,13 +61,23 @@ fun WeeklyForecast(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(24.dp)
         ) {
-            items(
-                items = data,
-                key = { it.dayOfWeek }
-            ) { item ->
-                Forecast(
-                    item = item
-                )
+            if (isLoading) {
+                items(7) {
+                    Forecast(
+                        isLoading = isLoading
+                    )
+                }
+            } else {
+                items(
+                    items = data,
+                    key = { it.dayOfWeek }
+                ) { item ->
+                    Forecast(
+                        item = item,
+                        isLoading = isLoading
+                    )
+                }
+
             }
         }
     }
@@ -137,7 +150,14 @@ fun WeatherImage(
 @Composable
 private fun Forecast(
     modifier: Modifier = Modifier,
-    item: ForecastItem
+    item: ForecastItem = ForecastItem(
+        image = -1,
+        dayOfWeek = "NaN",
+        date = "NaN",
+        temperature = "NaN",
+        isSelected = false
+    ),
+    isLoading: Boolean = false
 ) {
     val updatedModifier = remember(item.isSelected) {
         if (item.isSelected) {
@@ -181,46 +201,129 @@ private fun Forecast(
         }
     }
 
-    Column(
-        modifier = updatedModifier
-            .width(65.dp)
-            .padding(
-                horizontal = 10.dp,
-                vertical = 16.dp
-            ),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Text(
-            text = item.dayOfWeek,
-            style = MaterialTheme.typography.labelLarge,
-            color = primaryTextColor
+    if (isLoading) {
+        ShimmerEffect(
+            modifier = updatedModifier
+                .width(65.dp)
+                .height(180.dp)
+                .clip(RoundedCornerShape(50))
+                .background(Color.LightGray)
         )
-        Text(
-            text = item.date,
-            style = MaterialTheme.typography.labelMedium,
-            color = secondaryTextColor,
-            fontWeight = FontWeight.Normal
-        )
-        Spacer(
-            modifier = Modifier.height(8.dp)
-        )
-        WeatherImage(
-            image = item.image
-        )
-        Spacer(
-            modifier = Modifier.height(6.dp)
-        )
-        Text(
-            text = item.temperature,
-            letterSpacing = 0.sp,
-            style = temperatureTextStyle,
-        )
-        Spacer(
-            modifier = Modifier.height(8.dp)
-        )
+    } else {
+        Column(
+            modifier = updatedModifier
+                .width(65.dp)
+                .padding(
+                    horizontal = 10.dp,
+                    vertical = 16.dp
+                ),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+
+            Text(
+                text = item.dayOfWeek,
+                style = MaterialTheme.typography.labelLarge,
+                color = primaryTextColor
+            )
+            Text(
+                text = item.date,
+                style = MaterialTheme.typography.labelMedium,
+                color = secondaryTextColor,
+                fontWeight = FontWeight.Normal
+            )
+            Spacer(
+                modifier = Modifier.height(8.dp)
+            )
+            WeatherImage(
+                image = item.image
+            )
+            Spacer(
+                modifier = Modifier.height(6.dp)
+            )
+            Text(
+                text = item.temperature,
+                letterSpacing = 0.sp,
+                style = temperatureTextStyle,
+            )
+            Spacer(
+                modifier = Modifier.height(8.dp)
+            )
 //        AirQualityIndicator(
 //            value = item.airQuality,
 //            color = item.airQualityIndicatorColorHex
 //        )
+        }
     }
 }
+
+@Preview
+@Composable
+private fun WeeklyForecastPreview() {
+    MaterialTheme {
+        WeeklyForecast(
+            data = PreviewForecastData,
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.background)
+        )
+
+    }
+}
+
+@Preview
+@Composable
+private fun WeeklyForecastLoadingPreview() {
+    MaterialTheme {
+        WeeklyForecast(
+            isLoading = true,
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.background)
+        )
+
+    }
+}
+
+val PreviewForecastData = listOf(
+    ForecastItem(
+        image = R.drawable.img_cloudy,
+        dayOfWeek = "Mon",
+        date = "13 Feb",
+        temperature = "26°",
+    ),
+    ForecastItem(
+        image = R.drawable.img_moon_stars,
+        dayOfWeek = "Tue",
+        date = "14 Feb",
+        temperature = "18°",
+        isSelected = true
+    ),
+    ForecastItem(
+        image = R.drawable.img_thunder,
+        dayOfWeek = "Wed",
+        date = "15 Feb",
+        temperature = "16°",
+    ),
+    ForecastItem(
+        image = R.drawable.img_clouds,
+        dayOfWeek = "Thu",
+        date = "16 Feb",
+        temperature = "20°",
+    ),
+    ForecastItem(
+        image = R.drawable.img_sun,
+        dayOfWeek = "Fri",
+        date = "17 Feb",
+        temperature = "34°",
+    ),
+    ForecastItem(
+        image = R.drawable.img_rain,
+        dayOfWeek = "Sat",
+        date = "18 Feb",
+        temperature = "28°",
+    ),
+    ForecastItem(
+        image = R.drawable.img_thunder,
+        dayOfWeek = "Sun",
+        date = "19 Feb",
+        temperature = "24°",
+    )
+)
