@@ -1,0 +1,245 @@
+package com.hraj9258.weather.ui.presentation.components
+
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.dropShadow
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.shadow.Shadow
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import com.hraj9258.weather.core.presentation.ShimmerEffect
+import com.hraj9258.weather.core.presentation.theme.ColorGradient1
+import com.hraj9258.weather.core.presentation.theme.ColorGradient2
+import com.hraj9258.weather.core.presentation.theme.ColorGradient3
+import com.hraj9258.weather.core.presentation.theme.ColorImageShadow
+import com.hraj9258.weather.core.presentation.theme.ColorSurface
+import com.hraj9258.weather.core.presentation.theme.ColorTextPrimary
+import com.hraj9258.weather.core.presentation.theme.ColorTextSecondary
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import weatherapp.composeapp.generated.resources.Res
+import weatherapp.composeapp.generated.resources.ic_control
+import weatherapp.composeapp.generated.resources.ic_location_pin
+import weatherapp.composeapp.generated.resources.img_profile
+
+@Composable
+fun ActionBar(
+    city: String = "",
+    country: String = "",
+    isLoading: Boolean = false,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.Top,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        ControlButton()
+        LocationInfo(
+            modifier = Modifier.padding(top = 10.dp),
+            isLoading = isLoading,
+            location = "$city, $country",
+        )
+        ProfileButton()
+    }
+}
+
+@Composable
+private fun ControlButton(
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        color = ColorSurface,
+        shape = CircleShape,
+        modifier = modifier
+            .size(48.dp)
+            .dropShadow(
+                shape = CircleShape,
+                {
+                    color = Color.Black
+                    alpha = 0.15f
+                    radius = 16.dp.toPx() // Shadow blur radius
+                    spread = 4.dp.toPx()
+                    offset = Offset(0.0f, 4.dp.toPx())
+                }
+            )
+//            .customShadow(
+//                color = Color.Black,
+//                alpha = 0.15f,
+//                shadowRadius = 16.dp,
+//                borderRadius = 48.dp,
+//                offsetY = 4.dp
+//            ),
+    ) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Image(
+                painter = painterResource(Res.drawable.ic_control),
+                contentDescription = null,
+                modifier = Modifier.size(20.dp)
+            )
+        }
+    }
+}
+
+@Composable
+private fun ProfileButton(
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = Modifier
+            .size(48.dp)
+            .border(
+                width = 1.5.dp,
+                color = ColorSurface,
+                shape = CircleShape
+            )
+            .dropShadow(
+                shape = CircleShape,
+                {
+                    color = ColorImageShadow
+                    alpha = 0.7f
+                    radius = 48.0f // Shadow blur radius
+                    spread = 4.0f
+                    offset = Offset(0.0f, 6.dp.toPx())
+
+                }
+            )
+//            .customShadow(
+//                color = ColorImageShadow,
+//                alpha = 0.7f,
+//                shadowRadius = 12.dp,
+//                borderRadius = 48.dp,
+//                offsetY = 6.dp
+//            )
+    ) {
+        Image(
+            painter = painterResource(Res.drawable.img_profile),
+            contentDescription = null,
+            modifier = modifier
+                .fillMaxSize()
+                .clip(CircleShape)
+        )
+    }
+}
+
+@Composable
+private fun LocationInfo(
+    modifier: Modifier = Modifier,
+    isLoading: Boolean = false,
+    location: String
+) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Image(
+                painter = painterResource(Res.drawable.ic_location_pin),
+                contentDescription = null,
+                modifier = Modifier.height(18.dp),
+                contentScale = ContentScale.FillHeight
+            )
+            if (isLoading) {
+                ShimmerEffect(
+                    modifier = Modifier
+                        .padding(2.dp)
+                        .width(160.dp)
+                        .height(24.dp)
+                        .background(Color.LightGray, RoundedCornerShape(50))
+                )
+            } else {
+                Text(
+                    text = location,
+                    style = MaterialTheme.typography.titleLarge,
+                    color = ColorTextPrimary,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+        }
+        ProgressBar()
+    }
+}
+
+@Composable
+private fun ProgressBar(
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier
+            .background(
+                brush = Brush.linearGradient(
+                    0f to ColorGradient1,
+                    0.25f to ColorGradient2,
+                    1f to ColorGradient3
+                ),
+                shape = RoundedCornerShape(8.dp)
+            )
+            .padding(
+                vertical = 2.dp,
+                horizontal = 10.dp
+            )
+    ) {
+        Text(
+            text = "Updating •",
+            style = MaterialTheme.typography.labelSmall,
+            color = ColorTextSecondary.copy(alpha = 0.7f)
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun ActionBarPreview() {
+    MaterialTheme {
+        ActionBar(
+            city = "City",
+            country = "Country",
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.background)
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun ActionBarLoadingPreview() {
+    MaterialTheme {
+        ActionBar(
+            city = "City",
+            country = "Country",
+            isLoading = true,
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.background)
+        )
+    }
+}
