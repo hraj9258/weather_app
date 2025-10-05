@@ -18,17 +18,7 @@ Note on UI: The UI design and much of the Compose layout structure are adapted f
 
 
 ## Tech Stack
-- Language: Kotlin 2.2.20
-- UI: Jetpack Compose (Compose BOM 2025.09.01) and Material 3
-- DI: Koin 4.1.1 (androidx-compose)
-- Networking: Ktor 3.3.0 (CIO, Content Negotiation, Logging, Kotlinx JSON)
-- Location: Google Play Services Location 21.3.0
-- Android Gradle Plugin: 8.13.0
-- Min SDK 28, Target SDK 35, Compile SDK 36
-
-
-## Dependencies
-The project uses version catalogs. Key libraries are declared in gradle/libs.versions.toml and referenced in app/build.gradle.kts.
+The project uses version catalogs.
 
 - Kotlin MultiPlatform
 - Compose MultiPlatform
